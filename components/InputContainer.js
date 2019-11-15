@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import ShadowCard from "./ShadowCard";
 import StyledTextInput from "./StyledTextInput";
+import NumberOutputContainer from "./NumberOutputContainer";
 import colors from "../constants/colors";
 
 export default function InputContainer(props) {
@@ -26,6 +27,7 @@ export default function InputContainer(props) {
   }
 
   function pickNumber(e) {
+    Keyboard.dismiss();
     const pickedNumber = parseInt(enteredNumber);
     if (isNaN(enteredNumber) || pickedNumber <= 0 || pickedNumber > 999) {
       return Alert.alert("Invalid Entry!", "please give in a number", [
@@ -40,9 +42,9 @@ export default function InputContainer(props) {
   let confirmedOutput;
   if (isConfirmed) {
     confirmedOutput = (
-      <View style={styles.chosenText}>
-        <Text>you chose the number: {pickedNumber}</Text>
-      </View>
+      <NumberOutputContainer
+        pickedNumber={pickedNumber}
+      ></NumberOutputContainer>
     );
   }
 
@@ -57,31 +59,33 @@ export default function InputContainer(props) {
         //doesn't dissapear if you click outside of it
       }}
     >
-      <ShadowCard style={styles.container}>
-        <StyledTextInput
-          value={enteredNumber}
-          onChangeText={changeNumber}
-          style={styles.input}
-          placeholder="42"
-          blurOnSubmit
-          autoCapitalize="none"
-          keyboardType="numeric" // will give back numeric keyboard
-          maxLength={3}
-        ></StyledTextInput>
-        <View style={styles.buttonContainer}>
-          <View style={styles.btn}>
-            <Button title="clear" color="red" onPress={clearInput}></Button>
+      <View>
+        <ShadowCard style={styles.container}>
+          <StyledTextInput
+            value={enteredNumber}
+            onChangeText={changeNumber}
+            style={styles.input}
+            placeholder="42"
+            blurOnSubmit
+            autoCapitalize="none"
+            keyboardType="numeric" // will give back numeric keyboard
+            maxLength={3}
+          ></StyledTextInput>
+          <View style={styles.buttonContainer}>
+            <View style={styles.btn}>
+              <Button title="clear" color="red" onPress={clearInput}></Button>
+            </View>
+            <View style={styles.btn}>
+              <Button
+                title="pick"
+                color={colors.textBlue}
+                onPress={pickNumber}
+              ></Button>
+            </View>
           </View>
-          <View style={styles.btn}>
-            <Button
-              title="pick"
-              color={colors.textBlue}
-              onPress={pickNumber}
-            ></Button>
-          </View>
-        </View>
+        </ShadowCard>
         {confirmedOutput}
-      </ShadowCard>
+      </View>
     </TouchableWithoutFeedback>
   );
 }
@@ -105,8 +109,5 @@ const styles = StyleSheet.create({
   input: {
     width: 50,
     textAlign: "center"
-  },
-  chosenText: {
-    marginTop: 10
   }
 });
