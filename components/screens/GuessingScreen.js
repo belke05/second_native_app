@@ -4,11 +4,11 @@ import InputContainer from "../InputContainer";
 import colors from "../../constants/colors";
 import _fonts from "../../constants/fonts";
 
-export default function GuessingScreen() {
+export default function GuessingScreen({ startGame }) {
   return (
     <View style={styles.screen}>
       <Text style={styles.title}>What's the number?</Text>
-      <InputContainer></InputContainer>
+      <InputContainer startGame={startGame}></InputContainer>
     </View>
   );
 }

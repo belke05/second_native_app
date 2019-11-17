@@ -3,22 +3,14 @@ import { StyleSheet, View, Text, Button, Keyboard } from "react-native";
 import ShadowCard from "./ShadowCard";
 import colors from "../constants/colors";
 
-export default function NumberOutputContainer({ pickedNumber, children }) {
+export default function NumberOutputContainer({ title, number, children }) {
   return (
     <ShadowCard style={styles.container}>
-      <Text style={styles.title}>you chose the number</Text>
+      <Text style={styles.title}>{title}</Text>
       <View style={styles.numberContainer}>
-        <Text style={styles.number}>{pickedNumber}</Text>
+        <Text style={styles.number}>{number}</Text>
       </View>
-      <Button
-        theme="dark"
-        title="Let's start!"
-        color={colors.textBlue}
-        style={styles.btn}
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-      ></Button>
+      {children}
     </ShadowCard>
   );
 }
@@ -41,7 +33,9 @@ const styles = StyleSheet.create({
   numberContainer: {
     marginVertical: 10,
     borderColor: colors.backgroundGrey,
-    borderWidth: 1
+    borderWidth: 2,
+    padding: 5,
+    borderRadius: 5
   },
   btn: {
     color: "black"

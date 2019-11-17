@@ -13,7 +13,7 @@ import StyledTextInput from "./StyledTextInput";
 import NumberOutputContainer from "./NumberOutputContainer";
 import colors from "../constants/colors";
 
-export default function InputContainer(props) {
+export default function InputContainer({ children, startGame }) {
   const [enteredNumber, setEnteredNumber] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [pickedNumber, setPickedNumber] = useState("");
@@ -42,9 +42,18 @@ export default function InputContainer(props) {
   let confirmedOutput;
   if (isConfirmed) {
     confirmedOutput = (
-      <NumberOutputContainer
-        pickedNumber={pickedNumber}
-      ></NumberOutputContainer>
+      <NumberOutputContainer title="you chose the number" number={pickedNumber}>
+        <Button
+          theme="dark"
+          title="Let's start!"
+          color={colors.textBlue}
+          style={styles.btn2}
+          onPress={() => {
+            Keyboard.dismiss();
+            startGame(pickedNumber);
+          }}
+        ></Button>
+      </NumberOutputContainer>
     );
   }
 
@@ -69,7 +78,7 @@ export default function InputContainer(props) {
             blurOnSubmit
             autoCapitalize="none"
             keyboardType="numeric" // will give back numeric keyboard
-            maxLength={3}
+            maxLength={2}
           ></StyledTextInput>
           <View style={styles.buttonContainer}>
             <View style={styles.btn}>
@@ -109,5 +118,8 @@ const styles = StyleSheet.create({
   input: {
     width: 50,
     textAlign: "center"
+  },
+  btn2: {
+    color: "black"
   }
 });
