@@ -1,13 +1,14 @@
 import React from "react";
-import { Text, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import InputContainer from "../InputContainer";
+import BodyText from "../BodyText";
 import colors from "../../constants/colors";
 import _fonts from "../../constants/fonts";
 
 export default function GuessingScreen({ startGame }) {
   return (
     <View style={styles.screen}>
-      <Text style={styles.title}>What's the number?</Text>
+      <BodyText style={styles.title}>What's the number?</BodyText>
       <InputContainer startGame={startGame}></InputContainer>
     </View>
   );
@@ -22,8 +23,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundGrey
   },
   title: {
-    fontSize: 17,
-    color: colors.textBlue,
-    fontFamily: _fonts.defaultFont
+    color: colors.textBlue
   }
 });

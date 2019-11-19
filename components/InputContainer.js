@@ -4,11 +4,11 @@ import {
   View,
   TouchableWithoutFeedback,
   Button,
-  Text,
   Keyboard, // from here the native api
   Alert
 } from "react-native";
 import ShadowCard from "./ShadowCard";
+import StartButton from "./StartButton";
 import StyledTextInput from "./StyledTextInput";
 import NumberOutputContainer from "./NumberOutputContainer";
 import colors from "../constants/colors";
@@ -43,16 +43,14 @@ export default function InputContainer({ children, startGame }) {
   if (isConfirmed) {
     confirmedOutput = (
       <NumberOutputContainer title="you chose the number" number={pickedNumber}>
-        <Button
-          theme="dark"
-          title="Let's start!"
-          color={colors.textBlue}
-          style={styles.btn2}
-          onPress={() => {
+        <StartButton
+          onPressHandler={() => {
             Keyboard.dismiss();
             startGame(pickedNumber);
           }}
-        ></Button>
+        >
+          Let's start!
+        </StartButton>
       </NumberOutputContainer>
     );
   }

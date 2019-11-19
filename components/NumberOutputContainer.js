@@ -1,14 +1,15 @@
 import React from "react";
-import { StyleSheet, View, Text, Button, Keyboard } from "react-native";
+import { StyleSheet, View } from "react-native";
+import BodyText from "./BodyText";
 import ShadowCard from "./ShadowCard";
 import colors from "../constants/colors";
 
 export default function NumberOutputContainer({ title, number, children }) {
   return (
     <ShadowCard style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
+      <BodyText style={styles.title}>{title}</BodyText>
       <View style={styles.numberContainer}>
-        <Text style={styles.number}>{number}</Text>
+        <BodyText style={styles.number}>{number}</BodyText>
       </View>
       {children}
     </ShadowCard>

@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { StyleSheet, View, Button, Alert } from "react-native";
+import { StyleSheet, View, FlatList, Alert } from "react-native";
 import NumberOutputContainer from "../NumberOutputContainer";
 import ShadowCard from "../ShadowCard";
+import LowHighButton from "../LowHighButton";
+import { Ionicons } from "@expo/vector-icons";
 
 function guessRandom(min, max, exclude) {
   min = Math.ceil(min);
@@ -16,6 +18,7 @@ function guessRandom(min, max, exclude) {
 
 export default function GameScreen({ children, pickedNumber, gameOver }) {
   const [guess, setGuess] = useState(guessRandom(1, 100, pickedNumber)); // only considered by react if we dont have one yet
+  const [guessList, setGuessList] = useState({});
   const guesses = useRef(1);
   const currentLow = useRef(1);
   const currentHigh = useRef(100); // difference with a ref is that we dont get a rerender
@@ -27,8 +30,8 @@ export default function GameScreen({ children, pickedNumber, gameOver }) {
       return gameOver(guesses.current);
     }
   }, [guess]);
-
   function anotherGuess(isLower) {
+    setGuessList([...guessList, { num: guess, id: guesses }]);
     if (
       (isLower && guess < pickedNumber) ||
       (!isLower && guess > pickedNumber)
@@ -54,9 +57,18 @@ export default function GameScreen({ children, pickedNumber, gameOver }) {
         number={guess}
       ></NumberOutputContainer>
       <ShadowCard style={styles.btnContainer}>
-        <Button title="GREATER" onPress={anotherGuess.bind(this, false)} />
-        <Button title="LOWER" onPress={anotherGuess.bind(this, true)} />
+        <LowHighButton onPressHandler={anotherGuess.bind(this, false)}>
+          <Ionicons name="md-add" size={24} color="green" />
+        </LowHighButton>
+        <LowHighButton onPressHandler={anotherGuess.bind(this, true)}>
+          <Ionicons name="md-remove" size={24} color="red" />
+        </LowHighButton>
       </ShadowCard>
+      <FlatList
+        data={guessList}
+        renderItem={({ item }) => <Item title={item.num} />}
+        keyExtractor={itel => item.id}
+      ></FlatList>
     </View>
   );
 }
