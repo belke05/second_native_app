@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Header from "./components/Header";
-import GuessingScreen from "./components/screens/GuessingScreen";
+import StartScreen from "./components/screens/StartScreen";
 import GameScreen from "./components/screens/GameScreen";
 import GameOverScreen from "./components/screens/GameOverScreen";
 import * as Font from "expo-font";
@@ -52,9 +52,7 @@ export default function App() {
   return (
     <View style={styles.screen}>
       <Header title="Guess a number game"></Header>
-      {guessRounds === 0 && !isPlaying && (
-        <GuessingScreen startGame={startGame} />
-      )}
+      {guessRounds === 0 && !isPlaying && <StartScreen startGame={startGame} />}
       {isPlaying && (
         <GameScreen pickedNumber={userNumber} gameOver={gameOver} />
       )}

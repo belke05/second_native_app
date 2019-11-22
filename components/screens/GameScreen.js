@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { StyleSheet, View, FlatList, Alert, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Alert,
+  Dimensions,
+  ScrollView
+} from "react-native";
 import NumberOutputContainer from "../NumberOutputContainer";
 import ShadowCard from "../ShadowCard";
 import LowHighButton from "../LowHighButton";
@@ -32,6 +39,21 @@ export default function GameScreen({ children, pickedNumber, gameOver }) {
   const guesses = useRef(1);
   const currentLow = useRef(1);
   const currentHigh = useRef(100); // difference with a ref is that we dont get a rerender
+  const [availableDeviceHeight, setAvailableDeviceHeight] = useState(
+    Dimensions.get("window").height
+  );
+  const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
+    Dimensions.get("window").width
+  );
+
+  changeDimensions = () => {
+    setAvailableDeviceHeight(Dimensions.get("window").height);
+    setAvailableDeviceWidth(Dimensions.get("window").width);
+  };
+
+  useEffect(() => {
+    Dimensions.addEventListener("change", changeDimensions);
+  }, []);
 
   useEffect(() => {
     console.log("here", guess, pickedNumber);
@@ -64,30 +86,33 @@ export default function GameScreen({ children, pickedNumber, gameOver }) {
   }
 
   return (
-    <View style={styles.screen}>
-      <NumberOutputContainer
-        title="the computer guessed"
-        number={guess}
-      ></NumberOutputContainer>
-      <ShadowCard style={styles.btnContainer}>
-        <LowHighButton onPressHandler={anotherGuess.bind(this, false)}>
-          <Ionicons name="md-add" size={24} color="green" />
-        </LowHighButton>
-        <LowHighButton onPressHandler={anotherGuess.bind(this, true)}>
-          <Ionicons name="md-remove" size={24} color="red" />
-        </LowHighButton>
-      </ShadowCard>
-      <View style={styles.guessContainer}>
-        <FlatList
-          contentContainerStyle={styles.contentContainer}
-          data={guessList}
-          renderItem={({ item }) => {
-            return <Item title={item.num} round={item.id} />;
-          }}
-          keyExtractor={item => item.id}
-        ></FlatList>
+    <ScrollView>
+      <View style={styles.screen}>
+        <NumberOutputContainer
+          title="the computer guessed"
+          number={guess}
+        ></NumberOutputContainer>
+        <ShadowCard style={styles.btnContainer}>
+          <LowHighButton onPressHandler={anotherGuess.bind(this, false)}>
+            <Ionicons name="md-add" size={24} color="green" />
+          </LowHighButton>
+          <LowHighButton onPressHandler={anotherGuess.bind(this, true)}>
+            <Ionicons name="md-remove" size={24} color="red" />
+          </LowHighButton>
+        </ShadowCard>
+        <View style={styles.guessContainer}>
+          <FlatList
+            contentContainerStyle={styles.contentContainer}
+            data={guessList}
+            renderItem={({ item }) => {
+              return <Item title={item.num} round={item.id} />;
+            }}
+            keyExtractor={item => item.id}
+            scrollEnabled
+          ></FlatList>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -100,15 +125,14 @@ const styles = StyleSheet.create({
   btnContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginTop: 30,
-    width: 300,
+    marginHorizontal: Dimensions.get("window").height > 600 ? 20 : 10,
+    width: Dimensions.get("window").width * 0.8,
     maxWidth: "80%"
   },
   guessContainer: {
     justifyContent: "center",
     alignItems: "center",
-    flex: 1,
-    width: "60%"
+    width: "50%"
   },
   item: {
     borderWidth: 2,
@@ -117,12 +141,11 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "space-between",
     flexDirection: "row",
-    width: "70%"
+    width: "60%"
   },
   contentContainer: {
-    flexGrow: 0,
+    alignSelf: "center",
     alignItems: "center",
-    justifyContent: "flex-end",
-    width: "100%"
+    justifyContent: "flex-end"
   }
 });

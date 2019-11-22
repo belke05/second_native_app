@@ -13,7 +13,6 @@ export default function header({ title }) {
 // everything by default using flexbox
 const styles = StyleSheet.create({
   container: {
-    paddingTop: "10%",
     height: 100,
     width: "100%",
     backgroundColor: colors.textBlue,
@@ -23,6 +22,8 @@ const styles = StyleSheet.create({
   title: {
     color: colors.textWhite,
     fontSize: 20,
+    alignSelf: "center",
+    textAlign: "center",
     fontFamily: "open-sans-bold"
   }
 });

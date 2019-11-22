@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
   Button,
   Keyboard, // from here the native api
-  Alert
+  Alert,
+  Dimensions
 } from "react-native";
 import ShadowCard from "./ShadowCard";
 import StartButton from "./StartButton";
@@ -17,6 +18,19 @@ export default function InputContainer({ children, startGame }) {
   const [enteredNumber, setEnteredNumber] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [pickedNumber, setPickedNumber] = useState("");
+  const [buttonContainerWidth, setButtonContainerWidth] = useState(
+    Dimensions.get("window").width / 2
+  );
+
+  useEffect(() => {
+    Dimensions.addEventListener("change", updateLayout);
+    // otherwise event listener added on each re render
+  }, []);
+
+  updateLayout = () => {
+    setButtonContainerWidth(Dimensions.get("window").width / 2);
+  };
+
   function clearInput(e) {
     setEnteredNumber("");
     setIsConfirmed(false);
@@ -40,6 +54,7 @@ export default function InputContainer({ children, startGame }) {
   }
 
   let confirmedOutput;
+
   if (isConfirmed) {
     confirmedOutput = (
       <NumberOutputContainer title="you chose the number" number={pickedNumber}>
@@ -55,6 +70,47 @@ export default function InputContainer({ children, startGame }) {
     );
   }
 
+  if (Dimensions.get("window").width > 600) {
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+          // for ios because there keyboard
+          //doesn't dissapear if you click outside of it
+        }}
+      >
+        <View style={styles.screen}>
+          <ShadowCard
+            style={{ ...styles.rowcontainer, width: buttonContainerWidth + 30 }}
+          >
+            <View style={styles.btn}>
+              <Button title="clear" color="red" onPress={clearInput}></Button>
+            </View>
+            <StyledTextInput
+              value={enteredNumber}
+              onChangeText={changeNumber}
+              style={styles.input}
+              placeholder="42"
+              blurOnSubmit
+              autoCapitalize="none"
+              keyboardType="phone-pad" // will give back numeric keyboard
+              maxLength={2}
+            ></StyledTextInput>
+
+            <View style={styles.btn}>
+              <Button
+                title="pick"
+                color={colors.textBlue}
+                onPress={pickNumber}
+              ></Button>
+            </View>
+          </ShadowCard>
+          {confirmedOutput}
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
+
   return (
     // presentational card will give us some reusability we know we will
     // have the shadow on this we can ourselves choose the width height and other
@@ -66,8 +122,10 @@ export default function InputContainer({ children, startGame }) {
         //doesn't dissapear if you click outside of it
       }}
     >
-      <View>
-        <ShadowCard style={styles.container}>
+      <View style={styles.screen}>
+        <ShadowCard
+          style={{ ...styles.container, width: buttonContainerWidth + 30 }}
+        >
           <StyledTextInput
             value={enteredNumber}
             onChangeText={changeNumber}
@@ -75,10 +133,12 @@ export default function InputContainer({ children, startGame }) {
             placeholder="42"
             blurOnSubmit
             autoCapitalize="none"
-            keyboardType="numeric" // will give back numeric keyboard
+            keyboardType="phone-pad" // will give back numeric keyboard
             maxLength={2}
           ></StyledTextInput>
-          <View style={styles.buttonContainer}>
+          <View
+            style={{ ...styles.buttonContainer, width: buttonContainerWidth }}
+          >
             <View style={styles.btn}>
               <Button title="clear" color="red" onPress={clearInput}></Button>
             </View>
@@ -99,19 +159,24 @@ export default function InputContainer({ children, startGame }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: 300,
     maxWidth: "80%",
     alignItems: "center"
   },
+  rowcontainer: {
+    maxWidth: "80%",
+    alignItems: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center"
+  },
   buttonContainer: {
     flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     alignItems: "center"
   },
   btn: {
-    flex: 1,
-    marginHorizontal: 10
+    width: "40%",
+    marginHorizontal: "5%"
   },
   input: {
     width: 50,
@@ -119,5 +184,9 @@ const styles = StyleSheet.create({
   },
   btn2: {
     color: "black"
+  },
+  screen: {
+    alignItems: "center",
+    justifyContent: "center"
   }
 });

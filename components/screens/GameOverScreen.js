@@ -1,11 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import BodyText from "../BodyText";
 import colors from "../../constants/colors";
-import { View, Button, StyleSheet, Image, Text } from "react-native";
+import {
+  View,
+  Button,
+  StyleSheet,
+  Image,
+  Text,
+  Dimensions,
+  Platform
+} from "react-native";
+import { ScreenOrientation } from "expo";
+
 export default function GameOverScreen(props) {
+  const [dimensions, setDimensions] = useState({
+    height: Dimensions.get("window").height,
+    width: Dimensions.get("window").width
+  });
+  if (Platform.OS == "android") console.log("running on android");
+  useEffect(() => {
+    ScreenOrientation.addOrientationChangeListener(() => {
+      setDimensions({
+        height: Dimensions.get("window").height,
+        width: Dimensions.get("window").width
+      });
+    });
+  }, []);
+
   return (
     <View style={styles.screen}>
-      <View style={styles.imageContainer}>
+      <View
+        style={{
+          ...styles.imageContainer,
+          width: dimensions.width / 2,
+          height: dimensions.height / 2
+        }}
+      >
         <Image
           fadeDuration={500}
           source={require("../../assets/images/game_over.png")}
@@ -36,21 +66,20 @@ const styles = StyleSheet.create({
     height: "100%"
   },
   imageContainer: {
-    width: "40%",
-    height: "30%",
-    borderRadius: 150,
     borderWidth: 3,
-    borderColor: "blue",
-    overflow: "hidden"
+    borderColor: "black",
+    overflow: "hidden",
+    marginVertical: Dimensions.get("window").height * 0.05
   },
   highlighttext: {
     color: colors.textBlue
   },
   text_container: {
-    marginHorizontal: 20
+    marginVertical: 20
   },
   bodytext: {
-    textAlign: "center"
+    textAlign: "center",
+    fontSize: Dimensions.get("window").height < 400 ? 16 : 20
   }
 });
 // text position is auto wrapping
